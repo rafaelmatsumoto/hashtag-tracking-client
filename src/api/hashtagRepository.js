@@ -8,5 +8,5 @@ export default {
 
   createHashtag(payload) {
     return Repository.post(`${resource}`, payload);
-  }
-}
+  },
+};
