@@ -5,8 +5,8 @@
       color="primary"
       dark
     >
-      <div class="d-flex align-center">
-        <h2>Hashtag Tracking</h2>
+      <div class="d-flex align-center homepage">
+        <h2 @click="redirectToMainPage">Hashtag Tracking</h2>
       </div>
 
       <v-spacer></v-spacer>
@@ -21,7 +21,7 @@
 
     <v-content>
       <keep-alive>
-        <router-view></router-view>
+        <router-view :key="$route.path"></router-view>
       </keep-alive>
     </v-content>
   </v-app>
@@ -38,5 +38,17 @@ export default {
   data: () => ({
     //
   }),
+
+  methods: {
+    async redirectToMainPage() {
+      await this.$router.push({ name: 'home' });
+    },
+  },
 };
 </script>
+
+<style scoped>
+.homepage {
+  cursor: pointer;
+}
+</style>

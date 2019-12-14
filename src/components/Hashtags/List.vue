@@ -1,30 +1,16 @@
 <template>
   <div>
-    <div
-      class="d-flex flex-wrap"
-      color="grey lighten-2"
-      align="center"
-      justify="center"
-      flat
-      tile
-    >
-      <v-card
-        class="mx-auto"
-        max-width="344"
-        outlined
-        v-for="hashtag in hashtags"
-        :key="hashtag.id"
-      >
-        <p class="display-1 text--primary">
-         {{ hashtag.name }}
-        </p>
+    <Loading ref="loading"/>
+    <v-card v-for="hashtag in hashtags" :key="hashtag.id" @click="openHashtagTweets(hashtag.id)">
+        <a class="display-1 text--primary">
+          {{ hashtag.name }}
+        </a>
       </v-card>
-    </div>
-    <span>Hello World</span>
   </div>
 </template>
 
 <script>
+import Loading from '../Loading.vue';
 import { RepositoryFactory } from '../../api/RepositoryFactory';
 
 const HashtagsRepository = RepositoryFactory.get('hashtags');
@@ -34,18 +20,22 @@ export default {
   data: () => ({
     hashtags: [],
   }),
+  components: {
+    Loading,
+  },
   async mounted() {
     this.fetchHashtags();
   },
   methods: {
     async fetchHashtags() {
-      const { response } = await HashtagsRepository.get();
-      this.hashtags = response;
+      [this.hashtags] = (await this.$refs.loading.fetchPromises([HashtagsRepository.get()]))
+        .map(r => r.data);
+    },
+    async openHashtagTweets(id) {
+      await this.$router.push({ name: 'tweets', params: { id } });
     },
   },
 };
 </script>
 
-<style>
-
-</style>
+<style></style>
