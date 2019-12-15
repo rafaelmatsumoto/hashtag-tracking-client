@@ -1,6 +1,15 @@
 <template>
   <div>
     <Loading ref="loading"/>
+    <v-text-field
+      v-model="search"
+    ></v-text-field>
+    <v-btn
+      @click="queryTweets()"
+      color="primary">
+      Pesquisar
+    </v-btn>
+    <span v-if="tweets.length === 0">Tweets não encontrados</span>
     <v-card v-for="tweet in tweets" :key="tweet.id" class="mt-3">
         <a class="display-1 text--primary">
           {{ tweet.text }}
@@ -49,6 +58,10 @@ export default {
     },
     formatDate(date) {
       return dayjs(date).format('DD-MM-YYYY HH:mm:ss');
+    },
+    async queryTweets() {
+      [this.tweets] = (await this.$refs.loading.fetchPromises([TweetsRepository.query(this.id, `has_text=${this.search}`)]))
+        .map(r => r.data);
     },
   },
 };
