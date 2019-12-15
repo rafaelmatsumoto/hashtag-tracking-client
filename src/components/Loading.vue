@@ -13,7 +13,7 @@
 export default {
   data() {
     return {
-      open: false
+      open: false,
     };
   },
   methods: {
@@ -26,13 +26,13 @@ export default {
     async fetchPromises(promises) {
       this.openDialog();
       try {
-        return await Promise.all(promises);
+        return await Promise.resolve(promises);
       } catch (e) {
         throw e;
       } finally {
         this.closeDialog();
       }
-    }
-  }
+    },
+  },
 };
 </script>

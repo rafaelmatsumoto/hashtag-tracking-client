@@ -2,14 +2,14 @@
   <div>
     <Loading ref="loading"/>
     <v-text-field
-      v-model="search"
+      v-model.trim="search"
     ></v-text-field>
     <v-btn
       @click="queryTweets()"
       color="primary">
       Pesquisar
     </v-btn>
-    <span v-if="tweets.length === 0">Tweets não encontrados</span>
+    <span v-if="tweets.length == 0">Tweets não encontrados</span>
     <v-card v-for="tweet in tweets" :key="tweet.id" class="mt-3">
         <a class="display-1 text--primary">
           {{ tweet.text }}
@@ -23,7 +23,14 @@
         <p>
           {{ formatDate(tweet.published_date) }}
         </p>
-      </v-card>
+    </v-card>
+    <div class="text-center">
+      <v-pagination
+        v-model="page"
+        :length="Math.ceil(total/perPage)"
+        @input="fetchTweets"
+      ></v-pagination>
+    </div>
   </div>
 </template>
 
@@ -38,30 +45,46 @@ export default {
   name: 'TweetsList',
   data: () => ({
     tweets: [],
+    search: '',
+    page: 1,
+    total: null,
+    perPage: null,
   }),
   components: {
     Loading,
   },
   props: {
     id: {
-      type: Number,
       required: true,
     },
   },
   async mounted() {
-    this.fetchTweets();
+    await this.fetchTweets();
   },
   methods: {
     async fetchTweets() {
-      [this.tweets] = (await this.$refs.loading.fetchPromises([TweetsRepository.get(this.id)]))
-        .map(r => r.data);
+      await this.makeApiCall(`page=${this.page}&has_text=${this.search}`);
+    },
+    async queryTweets() {
+      this.resetPagination();
+      await this.fetchTweets();
+    },
+    async makeApiCall(queryParams) {
+      const response = await this.$refs.loading.fetchPromises(TweetsRepository.query(
+        this.id, queryParams,
+      ));
+      this.handleApiResponse(response);
+    },
+    resetPagination() {
+      this.page = 1;
     },
     formatDate(date) {
       return dayjs(date).format('DD-MM-YYYY HH:mm:ss');
     },
-    async queryTweets() {
-      [this.tweets] = (await this.$refs.loading.fetchPromises([TweetsRepository.query(this.id, `has_text=${this.search}`)]))
-        .map(r => r.data);
+    handleApiResponse(response) {
+      this.tweets = response.data;
+      this.perPage = response.headers['per-page'];
+      this.total = response.headers.total;
     },
   },
 };

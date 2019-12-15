@@ -38,8 +38,8 @@ export default {
   },
   methods: {
     async fetchHashtags() {
-      [this.hashtags] = (await this.$refs.loading.fetchPromises([HashtagsRepository.get()]))
-        .map(r => r.data);
+      this.hashtags = (await this.$refs.loading.fetchPromises(HashtagsRepository.get()))
+        .data;
     },
     async openHashtagTweets(id) {
       await this.$router.push({ name: 'tweets', params: { id } });

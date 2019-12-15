@@ -28,7 +28,7 @@ export default {
   data: () => ({
     name: null,
     nameRules: [
-      v => !!v || 'Name is required',
+      n => !!n || 'É necessário informar um nome',
     ],
   }),
   components: {
