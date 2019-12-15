@@ -9,4 +9,8 @@ export default {
   createHashtag(payload) {
     return Repository.post(`${resource}`, payload);
   },
+
+  deleteHashtag(id) {
+    return Repository.delete(`${resource}/${id}`);
+  },
 };
