@@ -1,28 +1,45 @@
 <template>
-  <div>
+  <v-container>
     <Loading ref="loading"/>
-    <v-text-field
-      v-model.trim="search"
-    ></v-text-field>
-    <v-btn
-      @click="queryTweets()"
-      color="primary">
-      Pesquisar
-    </v-btn>
+    <v-row no-gutters>
+      <v-text-field max-width="300"
+        v-model.trim="search"
+        label="Pesquisar"
+      ></v-text-field>
+      <v-btn
+        @click="queryTweets()"
+        color="primary">
+        Pesquisar
+      </v-btn>
+    </v-row>
     <span v-if="tweets.length == 0">Tweets não encontrados</span>
-    <v-card v-for="tweet in tweets" :key="tweet.id" class="mt-3">
-        <a class="display-1 text--primary">
+    <v-card
+      v-for="tweet in tweets"
+      :key="tweet.id"
+      class="ma-2"
+      color="#26c6da"
+      dark>
+       <v-card-title>
+          <v-icon
+            large
+            left
+          >
+            mdi-twitter
+          </v-icon>
+        </v-card-title>
+        <v-card-text class="headline font-weight-bold">
           {{ tweet.text }}
-        </a>
-        <p>
-          {{ tweet.name }}
-        </p>
-        <p>
-          @{{ tweet.username }}
-        </p>
-        <p>
-          {{ formatDate(tweet.published_date) }}
-        </p>
+        </v-card-text>
+        <v-card-actions>
+          <v-flex>
+            <span>
+              Autor: {{ tweet.name }} - @{{ tweet.username }}
+            </span>
+            <span>
+              Data de publicação: {{ formatDate(tweet.published_date) }}
+            </span>
+          </v-flex>
+        </v-card-actions>
     </v-card>
     <div class="text-center">
       <v-pagination
@@ -31,11 +48,12 @@
         @input="fetchTweets"
       ></v-pagination>
     </div>
-  </div>
+  </v-container>
 </template>
 
 <script>
 import dayjs from 'dayjs';
+import 'dayjs/locale/pt-br';
 import Loading from '../Loading.vue';
 import { RepositoryFactory } from '../../api/RepositoryFactory';
 
@@ -79,7 +97,7 @@ export default {
       this.page = 1;
     },
     formatDate(date) {
-      return dayjs(date).format('DD-MM-YYYY HH:mm:ss');
+      return dayjs(date).locale('pt-br').format('DD-MM-YYYY HH:mm:ss');
     },
     handleApiResponse(response) {
       this.tweets = response.data;

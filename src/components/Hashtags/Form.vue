@@ -40,11 +40,11 @@ export default {
         return;
       }
 
-      await this.$refs.loading.fetchPromises([HashtagsRepository.createHashtag(
+      await this.$refs.loading.fetchPromises(HashtagsRepository.createHashtag(
         {
           name: `#${this.name}`,
         },
-      )]);
+      ));
       this.$emit('created');
       this.$refs.form.reset();
     },
