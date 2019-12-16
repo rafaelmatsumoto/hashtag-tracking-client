@@ -20,9 +20,7 @@
     </v-app-bar>
 
     <v-content>
-      <keep-alive>
-        <router-view :key="$route.path"></router-view>
-      </keep-alive>
+      <router-view :key="$route.path"></router-view>
     </v-content>
   </v-app>
 </template>
