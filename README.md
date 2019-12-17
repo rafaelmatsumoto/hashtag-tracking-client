@@ -32,7 +32,7 @@
 
 ![Screenshot](./docs/screenshot.png)
 
-Client construído para cadastro e rastreio de hashtags, desenvolvida para o teste da Magrathea Labs.
+Client construído para cadastro e rastreio de hashtags, desenvolvido para o teste da Magrathea Labs.
 
 ## Getting Started
 
